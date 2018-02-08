@@ -14,8 +14,6 @@ import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
-import butterknife.BindView;
-import butterknife.ButterKnife;
 
 /**
  * Created by MReddy3 on 2/7/2018.
@@ -105,9 +103,19 @@ public class MainScreenRecipesAdapter extends RecyclerView.Adapter<MainScreenRec
         if(null == mRecipesList) {
             return null;
         }
-        else{
-            return mRecipesList.get(pos);
-        }
+        return mRecipesList.get(pos);
 
+
+    }
+
+    public void clearAdapter(){
+        if (null != mRecipesList){
+            mRecipesList.clear();
+            notifyDataSetChanged();
+        }
+    }
+
+    public ArrayList<RecipesModel> getAllRecipes(){
+        return mRecipesList;
     }
 }

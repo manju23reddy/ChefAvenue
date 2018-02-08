@@ -31,6 +31,26 @@ public class RecipeStepModel implements Parcelable {
         thumbnailURL = in.readString();
     }
 
+    public int getId(){
+        return id;
+    }
+
+    public String getShortDescription(){
+        return shortDescription;
+    }
+
+    public String getDescription(){
+        return description;
+    }
+
+    public String getVideoURL(){
+        return videoURL;
+    }
+
+    public String getThumbnailURL(){
+        return thumbnailURL;
+    }
+
     @Override
     public int describeContents() {
         return 0;

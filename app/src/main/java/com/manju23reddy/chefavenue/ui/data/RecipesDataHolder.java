@@ -110,4 +110,11 @@ public final class RecipesDataHolder {
     public ArrayList<RecipesModel> getAllRecipes(){
         return allRecipes;
     }
+
+    public RecipesModel getRecipe(int pos){
+        if (null != allRecipes){
+            return allRecipes.get(pos);
+        }
+        return null;
+    }
 }

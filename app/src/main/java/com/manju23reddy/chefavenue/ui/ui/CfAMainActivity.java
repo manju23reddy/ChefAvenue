@@ -6,11 +6,13 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.Loader;
 import android.os.AsyncTask;
+import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.View;
 
 import com.manju23reddy.chefavenue.R;
 import com.manju23reddy.chefavenue.ui.ApplicationClass;
@@ -29,9 +31,10 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class CfAMainActivity extends AppCompatActivity implements
-        LoaderManager.LoaderCallbacks<ArrayList<RecipesModel>> {
+        android.support.v4.app.LoaderManager.LoaderCallbacks<ArrayList<RecipesModel>> {
 
     private static String TAG = CfAMainActivity.class.getSimpleName();
+    int CHEF_AVE_LOADER_ID = 2394;
 
     @BindView(R.id.rcv_recipes)
     RecyclerView mRecipeRCV;
@@ -46,6 +49,8 @@ public class CfAMainActivity extends AppCompatActivity implements
         ButterKnife.bind(this);
 
         initUI();
+
+        startLoader();
     }
 
     public void initUI(){
@@ -63,28 +68,74 @@ public class CfAMainActivity extends AppCompatActivity implements
         mRecipeAdapter = new MainScreenRecipesAdapter(this, recipeClickListener);
         mRecipeRCV.setAdapter(mRecipeAdapter);
 
+    }
 
-        new JSONFileReader(this).execute(getApplicationContext());
-
+    public void startLoader(){
+        android.support.v4.app.LoaderManager loaderManager = getSupportLoaderManager();
+        android.support.v4.content.Loader<String> loader = loaderManager.
+                getLoader(CHEF_AVE_LOADER_ID);
+        if (null == loader) {
+            loaderManager.initLoader(CHEF_AVE_LOADER_ID, null, this);
+        }
+        else {
+            loaderManager.restartLoader(CHEF_AVE_LOADER_ID, null, this);
+        }
     }
 
     MainScreenRecipesAdapter.OnRecipeClicked recipeClickListener =
             new MainScreenRecipesAdapter.OnRecipeClicked() {
         @Override
         public void onReceipeClicked(int pos) {
-
-            RecipesModel selectedRecipe = mRecipeAdapter.getRecipeAtPos(pos);
             Intent recipeDetailActivity = new Intent(CfAMainActivity.this,
                     CfARecipeDetailsActivity.class);
-            recipeDetailActivity.putExtra(ChefAvenueConsts.SELECTED_RECIPE, selectedRecipe);
+            Bundle args = new Bundle();
+            args.putInt(ChefAvenueConsts.RECIPE_ID, pos);
+            recipeDetailActivity.putExtras(args);
             startActivity(recipeDetailActivity);
 
         }
     };
 
     @Override
-    public Loader<ArrayList<RecipesModel>> onCreateLoader(int id, Bundle args) {
-        return new AsyncTaskLoader<ArrayList<RecipesModel>>(this) {
+    protected void onRestoreInstanceState(final Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+
+        mRecipeAdapter.setRecipes(RecipesDataHolder.getRecipesDataHolderInstance().getAllRecipes());
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                final int scrollPos =  savedInstanceState.getInt(ChefAvenueConsts.
+                        MAIN_RCV_INDEX);
+                GridLayoutManager laytManager = (GridLayoutManager)mRecipeRCV.
+                        getLayoutManager();
+                View v = mRecipeRCV.getChildAt(scrollPos);
+
+                int top = (v == null)? 0 : (v.getTop() -
+                        mRecipeRCV.getPaddingTop());
+
+                laytManager.scrollToPositionWithOffset(scrollPos, top);
+            }
+        }, 1000);
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+
+        GridLayoutManager laytManager = (GridLayoutManager)mRecipeRCV.
+                getLayoutManager();
+
+        int index = laytManager.findFirstCompletelyVisibleItemPosition();
+
+
+        outState.putInt(ChefAvenueConsts.MAIN_RCV_INDEX,
+                index);
+    }
+
+    @Override
+    public android.support.v4.content.Loader<ArrayList<RecipesModel>> onCreateLoader(int id, Bundle args) {
+        return new android.support.v4.content.AsyncTaskLoader<ArrayList<RecipesModel>>(this) {
+
             @Override
             protected void onStartLoading() {
                 ArrayList<RecipesModel> dataRecipes = RecipesDataHolder.
@@ -130,49 +181,15 @@ public class CfAMainActivity extends AppCompatActivity implements
     }
 
     @Override
-    public void onLoadFinished(Loader<ArrayList<RecipesModel>> loader, ArrayList<RecipesModel> data) {
-
+    public void onLoadFinished(android.support.v4.content.Loader<ArrayList<RecipesModel>> loader, ArrayList<RecipesModel> data) {
+        mRecipeAdapter.setRecipes(data);
     }
 
     @Override
-    public void onLoaderReset(Loader<ArrayList<RecipesModel>> loader) {
-        mRecipeAdapter.
+    public void onLoaderReset(android.support.v4.content.Loader<ArrayList<RecipesModel>> loader) {
+        mRecipeAdapter.clearAdapter();
     }
 
-    private static class JSONFileReader extends AsyncTask<Context, Void, Void> {
-        CfAMainActivity instance;
-        public JSONFileReader(CfAMainActivity inst){
-            instance = inst;
-        }
-        @Override
-        protected Void doInBackground(Context... contexts) {
-            Context context = contexts[0];
-            try{
-                String recipesJSON = null;
-                InputStream is = context.getAssets().open("baking.json");
-                int size = is.available();
-                byte[] bufffer = new byte[size];
-                is.read(bufffer);
-                is.close();
-                recipesJSON = new String(bufffer, "UTF-8");
-                JSONArray allReceipes = new JSONArray(recipesJSON);
-                RecipesDataHolder holder = RecipesDataHolder.getRecipesDataHolderInstance();
-                holder.parseRecipesFromJSON(allReceipes);
 
-                //Todo just for debug remove later
-                Log.d(TAG, RecipesDataHolder.getRecipesDataHolderInstance().getAllRecipes().
-                        toString());
-            }
-            catch (Exception ee){
-                Log.e(TAG, ee.getMessage());
-            }
-            return null;
-        }
 
-        @Override
-        protected void onPostExecute(Void aVoid) {
-            super.onPostExecute(aVoid);
-            instance.mRecipeAdapter.setRecipes(RecipesDataHolder.getRecipesDataHolderInstance().getAllRecipes());
-        }
-    }
 }
