@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="150dp"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+
+    >
+
+    <android.support.v7.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/card_view"
+        app:cardCornerRadius="4dp"
+        app:cardElevation="6dp"
+        android:layout_margin="10dp"
+        android:background="@drawable/item_selector"
+        >
+
+        <ImageView
+            android:layout_width="150dp"
+            android:layout_gravity="end"
+            android:layout_height="match_parent"
+            android:id="@+id/img_thumbnail"
+            android:adjustViewBounds="true"
+            android:scaleType="fitXY"
+            android:src="@drawable/dinner"
+            />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/txtv_title"
+            android:text="Donuts"
+            android:textSize="20dp"
+            android:layout_margin="5dip"
+            android:gravity="center"
+            android:fontFamily="sans-serif-condensed"
+            android:textAppearance="@style/Base.TextAppearance.AppCompat.Title"
+            android:layout_gravity="start|center"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="start|bottom"
+            android:id="@+id/txtv_serving"
+            android:gravity="center"
+            android:text="2"
+            android:layout_margin="5dip"
+            android:drawableLeft="@drawable/serve"
+           />
+    </android.support.v7.widget.CardView>
+
+
+
+</LinearLayout>

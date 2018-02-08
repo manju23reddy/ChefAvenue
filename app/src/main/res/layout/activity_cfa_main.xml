@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.manju23reddy.chefavenue.ui.ui.CfAMainActivity">
+
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:id="@+id/flyt_recipes">
+
+            <TextView
+                android:layout_margin="10dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/recipes"
+                android:id="@+id/txtv_recipes"
+                android:textSize="25dp"
+                android:textAppearance="@style/Base.TextAppearance.AppCompat.Title"
+                android:fontFamily="cursive"
+                android:layout_gravity="center"
+                android:padding="5dp"
+                />
+
+            <android.support.v7.widget.RecyclerView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/rcv_recipes"
+                android:layout_gravity="center"
+                />
+
+        </LinearLayout>
+
+
+
+</android.support.constraint.ConstraintLayout>

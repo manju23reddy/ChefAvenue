@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">ChefAvenue</string>
+    <string name="ingredients">Ingredients</string>
+    <string name="next_step">Next Step</string>
+    <string name="previous_step">Previous Step</string>
+    <string name="recipes">Recipes</string>
+</resources>
