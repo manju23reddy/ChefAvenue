@@ -61,18 +61,17 @@ public class RecipeStepsListAdapter extends RecyclerView.Adapter<RecipeStepsList
         notifyDataSetChanged();
     }
 
-    public void clearSteps(){
-        if (null != mStepsList){
-            mStepsList.clear();
-            notifyDataSetChanged();
-        }
-    }
+
 
     public RecipeStepModel getStep(int pos){
         if (null == mStepsList)
             return null;
 
         return mStepsList.get(pos);
+    }
+
+    public ArrayList<RecipeStepModel> getAllSteps(){
+        return mStepsList;
     }
 
     public class StepsListViewHolder extends RecyclerView.ViewHolder{

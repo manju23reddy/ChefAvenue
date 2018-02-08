@@ -10,7 +10,7 @@ import android.os.Parcelable;
 public class RecipeIngredientModel implements Parcelable {
     private double quantity;
     private String ingredient;
-    private String unitMeasure;
+    private String measure;
 
     @Override
     public int describeContents() {
@@ -20,20 +20,32 @@ public class RecipeIngredientModel implements Parcelable {
     public RecipeIngredientModel(final double iQuantity, String iIngredient, String iUnitMeasure ){
         this.quantity = iQuantity;
         this.ingredient = iIngredient;
-        this.unitMeasure = iUnitMeasure;
+        this.measure = iUnitMeasure;
     }
 
     public RecipeIngredientModel(Parcel in){
         this.quantity = in.readDouble();
         this.ingredient = in.readString();
-        this.unitMeasure = in.readString();
+        this.measure = in.readString();
+    }
+
+    public String getIngredient(){
+        return ingredient;
+    }
+
+    public String getMeasure(){
+        return measure;
+    }
+
+    public double getQuantity(){
+        return quantity;
     }
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
             dest.writeDouble(quantity);
             dest.writeString(ingredient);
-            dest.writeString(unitMeasure);
+            dest.writeString(measure);
     }
 
     public static final Parcelable.Creator<RecipeIngredientModel> CREATOR = new

@@ -44,7 +44,11 @@ public final class ChefAvenueConsts {
     public final static int TAB_GRID_SPAN_COUNT = 3;
 
     public final static String MAIN_RCV_INDEX = "rcv_index";
-    public final static String MAIN_RCV_ITEMS = "persist";
+    public final static String STEPS_RCV_INDEX = "persist";
+
+    public final static String RESTORE_LAST_FRAGMENT = "restore_fragment";
+
+    public final static String RESTORE_DETAIL_FRAGMENT = "restore_detail";
 
 
 
