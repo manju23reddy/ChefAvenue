@@ -14,6 +14,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.exoplayer2.DefaultLoadControl;
+import com.google.android.exoplayer2.ExoPlayer;
 import com.google.android.exoplayer2.ExoPlayerFactory;
 import com.google.android.exoplayer2.LoadControl;
 import com.google.android.exoplayer2.SimpleExoPlayer;
@@ -22,6 +23,7 @@ import com.google.android.exoplayer2.source.ExtractorMediaSource;
 import com.google.android.exoplayer2.source.MediaSource;
 import com.google.android.exoplayer2.trackselection.DefaultTrackSelector;
 import com.google.android.exoplayer2.trackselection.TrackSelector;
+import com.google.android.exoplayer2.ui.AspectRatioFrameLayout;
 import com.google.android.exoplayer2.ui.SimpleExoPlayerView;
 import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory;
 import com.manju23reddy.chefavenue.R;
@@ -115,6 +117,7 @@ public class CfARecipeStepDetailsFragment extends Fragment implements View.OnCli
             TrackSelector trackSelector = new DefaultTrackSelector();
             mSexoPlayer = ExoPlayerFactory.newSimpleInstance(getActivity(), trackSelector);
             mSMediaPlayer.setPlayer(mSexoPlayer);
+            mSMediaPlayer.setResizeMode(AspectRatioFrameLayout.RESIZE_MODE_FILL);
 
         }
         else {
