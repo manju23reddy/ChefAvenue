@@ -1,11 +1,6 @@
 package com.manju23reddy.chefavenue.ui.ui;
 
-import android.app.LoaderManager;
-import android.content.AsyncTaskLoader;
-import android.content.Context;
 import android.content.Intent;
-import android.content.Loader;
-import android.os.AsyncTask;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -15,10 +10,8 @@ import android.util.Log;
 import android.view.View;
 
 import com.manju23reddy.chefavenue.R;
-import com.manju23reddy.chefavenue.ui.ApplicationClass;
 import com.manju23reddy.chefavenue.ui.adapters.MainScreenRecipesAdapter;
 import com.manju23reddy.chefavenue.ui.data.RecipesDataHolder;
-import com.manju23reddy.chefavenue.ui.model.RecipeStepModel;
 import com.manju23reddy.chefavenue.ui.model.RecipesModel;
 import com.manju23reddy.chefavenue.ui.util.ChefAvenueConsts;
 

@@ -13,11 +13,6 @@
             android:layout_weight="3"
             android:layout_height="match_parent"
             android:id="@+id/lyt_recipe_details_list"/>
-        <view
-            android:layout_width="0dp"
-                android:layout_weight="0.09"
-            android:layout_height="match_parent"
-            android:background="@color/colorPrimaryDark"/>
         
         <FrameLayout
             android:layout_width="0dp"

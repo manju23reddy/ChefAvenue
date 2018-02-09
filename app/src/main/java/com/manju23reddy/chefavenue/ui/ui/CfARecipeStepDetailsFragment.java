@@ -82,15 +82,17 @@ public class CfARecipeStepDetailsFragment extends Fragment implements View.OnCli
         Bundle args;
 
         if (null != savedInstanceState){
-
+            mRecipeSteps = savedInstanceState.getParcelableArrayList(ChefAvenueConsts.RECIPE_STEPS);
+            mCurrentStep = savedInstanceState.getInt(ChefAvenueConsts.STEP_ID);
         }
         else{
             args = this.getArguments();
             mRecipeSteps = args.getParcelableArrayList(ChefAvenueConsts.RECIPE_STEPS);
             mCurrentStep = args.getInt(ChefAvenueConsts.STEP_ID);
-            if (!mIsTab){
-                validateButtons();
-            }
+
+        }
+        if (!mIsTab){
+            validateButtons();
         }
         bindUI(mCurrentStep);
 
@@ -99,6 +101,12 @@ public class CfARecipeStepDetailsFragment extends Fragment implements View.OnCli
         return rootView;
     }
 
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putInt(ChefAvenueConsts.STEP_ID, mCurrentStep);
+        outState.putParcelableArrayList(ChefAvenueConsts.RECIPE_STEPS, mRecipeSteps);
+    }
 
     public void initializePlayer(String url){
         if (null == mSexoPlayer){
@@ -168,13 +176,10 @@ public class CfARecipeStepDetailsFragment extends Fragment implements View.OnCli
         mSelectionHandler.closeStepsPage();
     }
 
-    public int getCurrentStep(){
-        return 0;
+    public int getCurrentStepID(){
+        return mCurrentStep;
     }
 
-    public RecipeStepModel getCurrentStepDetails(){
-        return null;
-    }
 
     @Override
     public void onClick(View v) {

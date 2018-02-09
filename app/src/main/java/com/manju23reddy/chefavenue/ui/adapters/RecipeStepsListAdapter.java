@@ -44,8 +44,9 @@ public class RecipeStepsListAdapter extends RecyclerView.Adapter<RecipeStepsList
     @Override
     public void onBindViewHolder(StepsListViewHolder holder, int position) {
         RecipeStepModel model = mStepsList.get(position);
-
-        holder.mShortDescStepTxtView.setText("Step "+model.getId()+" "+model.getShortDescription());
+        int id = model.getId()+1;
+        holder.mStepNumber.setText("Step "+id);
+        holder.mShortDescStepTxtView.setText(model.getShortDescription());
     }
 
     @Override
@@ -76,10 +77,12 @@ public class RecipeStepsListAdapter extends RecyclerView.Adapter<RecipeStepsList
 
     public class StepsListViewHolder extends RecyclerView.ViewHolder{
         private TextView mShortDescStepTxtView;
+        private TextView mStepNumber;
 
         public StepsListViewHolder(View view){
             super(view);
 
+            mStepNumber = view.findViewById(R.id.txtv_stepnumber);
             mShortDescStepTxtView = view.findViewById(R.id.txtv_title);
 
             view.setOnClickListener(new View.OnClickListener() {

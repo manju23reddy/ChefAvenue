@@ -1,12 +1,15 @@
 package com.manju23reddy.chefavenue.ui.ui;
 
 import android.app.Fragment;
+import android.appwidget.AppWidgetManager;
+import android.content.ComponentName;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuInflater;
+import android.view.MenuItem;
 
 import com.manju23reddy.chefavenue.R;
 import com.manju23reddy.chefavenue.ui.data.RecipesDataHolder;
@@ -27,6 +30,8 @@ public class CfARecipeDetailsActivity extends AppCompatActivity implements IReci
         INGREDIENT_LIST_FRAGMENT,
         STEP_FRAGMENT
     };
+    String[] Fragment_TAGS = {"ALL_LIST_FRAGMENT_TAG", "INGREDIENT_LIST_FRAGMENT_TAG",
+            "STEP_FRAGMENT_TAG"};
 
     TopFragment mTopFragment;
 
@@ -35,38 +40,41 @@ public class CfARecipeDetailsActivity extends AppCompatActivity implements IReci
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_recipe);
 
-        Intent inComingIntet = getIntent();
-        if (null != inComingIntet){
-            Bundle args = inComingIntet.getExtras();
-            mSelectedPos = args.getInt(ChefAvenueConsts.RECIPE_ID);
-            mSelectedRecipe = RecipesDataHolder.getRecipesDataHolderInstance().
-                    getRecipe(mSelectedPos);
-            getSupportActionBar().setTitle(mSelectedRecipe.getRecipeName());
-        }
+
 
         mIsTwoPane = (null != findViewById(R.id.lyt_tablet_view)) ? true : false;
 
         if (null != savedInstanceState){
-            if (savedInstanceState.containsKey(ChefAvenueConsts.RESTORE_LAST_FRAGMENT) &&
-                    false == mIsTwoPane){
-                int lastFrag = savedInstanceState.getInt(ChefAvenueConsts.RESTORE_LAST_FRAGMENT);
-                if (lastFrag == TopFragment.ALL_LIST_FRAGMENT.ordinal()){
-                    createListPaneFragment();
+            if (!mIsTwoPane){
+                int last_frag = savedInstanceState.getInt(ChefAvenueConsts.RESTORE_LAST_FRAGMENT);
+                if (TopFragment.STEP_FRAGMENT.ordinal() == last_frag){
+                    mTopFragment = TopFragment.STEP_FRAGMENT;
                 }
-                else if (lastFrag == TopFragment.INGREDIENT_LIST_FRAGMENT.ordinal()){
-                    createIngredientListFragment();
+                else if (TopFragment.ALL_LIST_FRAGMENT.ordinal() == last_frag){
+                    mTopFragment = TopFragment.ALL_LIST_FRAGMENT;
                 }
-                else if (lastFrag == TopFragment.STEP_FRAGMENT.ordinal()){
-                    //Todo setps ID and details should be saved in bundle in onSavedState
-                    //createStepDetailFragment();
+                else if (TopFragment.INGREDIENT_LIST_FRAGMENT.ordinal() == last_frag){
+                    mTopFragment = TopFragment.INGREDIENT_LIST_FRAGMENT;
                 }
-            }
-            else if (savedInstanceState.containsKey(ChefAvenueConsts.RESTORE_DETAIL_FRAGMENT) &&
-                    true == mIsTwoPane){
+                else {
 
+                }
+                mCurrentFragment = getSupportFragmentManager().
+                        findFragmentByTag(Fragment_TAGS[last_frag]);
             }
+            mSelectedPos = savedInstanceState.getInt(ChefAvenueConsts.RECIPE_ID);
+            mSelectedRecipe = RecipesDataHolder.getRecipesDataHolderInstance().
+                    getRecipe(mSelectedPos);
         }
         else {
+            Intent inComingIntet = getIntent();
+            if (null != inComingIntet){
+                Bundle args = inComingIntet.getExtras();
+                mSelectedPos = args.getInt(ChefAvenueConsts.RECIPE_ID);
+                mSelectedRecipe = RecipesDataHolder.getRecipesDataHolderInstance().
+                        getRecipe(mSelectedPos);
+
+            }
             if (mIsTwoPane) {
                 createListPaneFragment();
                 createIngredientListFragment();
@@ -77,6 +85,7 @@ public class CfARecipeDetailsActivity extends AppCompatActivity implements IReci
 
             }
         }
+        getSupportActionBar().setTitle(mSelectedRecipe.getRecipeName());
     }
 
     @Override
@@ -87,21 +96,28 @@ public class CfARecipeDetailsActivity extends AppCompatActivity implements IReci
 
     }
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == R.id.add_to_widget_action){
+            AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(this);
+            int[] appWidgets = appWidgetManager.getAppWidgetIds(new ComponentName(
+                    this, ChefAvenueWidget.class));
+            ChefAvenueWidget.updateIngredients(this, appWidgetManager, mSelectedRecipe, appWidgets);
+            return true;
+        }
+        else{
+            return super.onOptionsItemSelected(item);
+        }
 
-
-
+    }
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        if (mIsTwoPane){
-            outState.putInt(ChefAvenueConsts.RESTORE_DETAIL_FRAGMENT, mTopFragment.ordinal());
-        }
-        else{
+        if (!mIsTwoPane){
             outState.putInt(ChefAvenueConsts.RESTORE_LAST_FRAGMENT, mTopFragment.ordinal());
         }
-
-
+        outState.putInt(ChefAvenueConsts.RECIPE_ID, mSelectedPos);
     }
 
     public void createListPaneFragment(){
@@ -112,7 +128,8 @@ public class CfARecipeDetailsActivity extends AppCompatActivity implements IReci
         recipeListFragment.setArguments(recipeDetails);
 
         fragmentManager.beginTransaction().
-                    replace(R.id.lyt_recipe_details_list, recipeListFragment).commit();
+                    replace(R.id.lyt_recipe_details_list, recipeListFragment,
+                            Fragment_TAGS[TopFragment.ALL_LIST_FRAGMENT.ordinal()]).commit();
 
         if (!mIsTwoPane){
             mCurrentFragment = (android.support.v4.app.Fragment) recipeListFragment;
@@ -132,11 +149,15 @@ public class CfARecipeDetailsActivity extends AppCompatActivity implements IReci
         ingredientsDetailsFragment.setArguments(ingredientList);
         if (mIsTwoPane) {
             fragmentManager.beginTransaction().
-                    add(R.id.lyt_recipe_description_view, ingredientsDetailsFragment).commit();
+                    replace(R.id.lyt_recipe_description_view,
+                            ingredientsDetailsFragment,
+                            Fragment_TAGS[TopFragment.INGREDIENT_LIST_FRAGMENT.ordinal()]).commit();
         }
         else{
             fragmentManager.beginTransaction().
-                    replace(R.id.lyt_recipe_details_list, ingredientsDetailsFragment).commit();
+                    replace(R.id.lyt_recipe_details_list,
+                            ingredientsDetailsFragment,
+                            Fragment_TAGS[TopFragment.INGREDIENT_LIST_FRAGMENT.ordinal()]).commit();
 
             mCurrentFragment = (android.support.v4.app.Fragment) ingredientsDetailsFragment;
             mTopFragment = TopFragment.INGREDIENT_LIST_FRAGMENT;
@@ -157,11 +178,15 @@ public class CfARecipeDetailsActivity extends AppCompatActivity implements IReci
         stepDetailFragment.setArguments(stepsList);
         if(mIsTwoPane) {
             fragmentManager.beginTransaction().
-                    add(R.id.lyt_recipe_description_view, stepDetailFragment).commit();
+                    replace(R.id.lyt_recipe_description_view,
+                            stepDetailFragment,
+                            Fragment_TAGS[TopFragment.STEP_FRAGMENT.ordinal()]).commit();
         }
         else{
             fragmentManager.beginTransaction().
-                    replace(R.id.lyt_recipe_details_list, stepDetailFragment).commit();
+                    replace(R.id.lyt_recipe_details_list,
+                            stepDetailFragment,
+                            Fragment_TAGS[TopFragment.STEP_FRAGMENT.ordinal()]).commit();
             mCurrentFragment = (android.support.v4.app.Fragment) stepDetailFragment;
             mTopFragment = TopFragment.STEP_FRAGMENT;
         }
@@ -214,6 +239,9 @@ public class CfARecipeDetailsActivity extends AppCompatActivity implements IReci
                     break;
 
             }
+        }
+        else {
+            super.onBackPressed();
         }
 
     }

@@ -32,7 +32,7 @@ public class RecipeIngredientsListAdapter extends RecyclerView.Adapter
     @Override
     public IngredientsListViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         Context context = parent.getContext();
-        int layoutIdForListItem = R.layout.ingredients_items_lyt;
+        int layoutIdForListItem = R.layout.recipe_detail_card_layout;
         LayoutInflater inflater = LayoutInflater.from(context);
         boolean shouldAttachToParentImmediately = false;
 
@@ -73,8 +73,8 @@ public class RecipeIngredientsListAdapter extends RecyclerView.Adapter
         public IngredientsListViewHolder(View view){
             super(view);
 
-            mIngredientNameTxtV = view.findViewById(R.id.txtv_ingredient_name);
-            mQuantityTxtV = view.findViewById(R.id.txtv_quantity);
+            mIngredientNameTxtV = view.findViewById(R.id.txtv_title);
+            mQuantityTxtV = view.findViewById(R.id.txtv_stepnumber);
 
         }
     }
