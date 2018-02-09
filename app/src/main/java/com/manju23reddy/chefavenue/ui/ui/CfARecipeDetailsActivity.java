@@ -10,6 +10,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import com.manju23reddy.chefavenue.R;
 import com.manju23reddy.chefavenue.ui.data.RecipesDataHolder;
@@ -103,6 +104,9 @@ public class CfARecipeDetailsActivity extends AppCompatActivity implements IReci
             int[] appWidgets = appWidgetManager.getAppWidgetIds(new ComponentName(
                     this, ChefAvenueWidget.class));
             ChefAvenueWidget.updateIngredients(this, appWidgetManager, mSelectedRecipe, appWidgets);
+            Toast.makeText(this,
+                    mSelectedRecipe.getRecipeName()+" Ingredients added to your widget.",
+                    Toast.LENGTH_LONG).show();
             return true;
         }
         else{

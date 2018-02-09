@@ -1,6 +1,7 @@
 package com.manju23reddy.chefavenue.ui.ui;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -10,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.exoplayer2.DefaultLoadControl;
 import com.google.android.exoplayer2.ExoPlayerFactory;
@@ -37,7 +39,7 @@ import butterknife.ButterKnife;
 public class CfARecipeStepDetailsFragment extends Fragment implements View.OnClickListener{
     IRecipeDetailSelectionHandler mSelectionHandler = null;
 
-    ImageView mThumbNailImgV;
+
     SimpleExoPlayerView mSMediaPlayer;
     SimpleExoPlayer mSexoPlayer;
 
@@ -60,7 +62,7 @@ public class CfARecipeStepDetailsFragment extends Fragment implements View.OnCli
         View rootView = inflater.inflate(R.layout.fragment_step_layout, container,
                 false);
 
-        mThumbNailImgV = rootView.findViewById(R.id.img_thumbnail);
+
         mSMediaPlayer = rootView.findViewById(R.id.sexop_media_player);
 
         mStepSDTxtV = rootView.findViewById(R.id.txtv_stepsd);
@@ -111,12 +113,12 @@ public class CfARecipeStepDetailsFragment extends Fragment implements View.OnCli
     public void initializePlayer(String url){
         if (null == mSexoPlayer){
             TrackSelector trackSelector = new DefaultTrackSelector();
-            LoadControl loadControl = new DefaultLoadControl();
             mSexoPlayer = ExoPlayerFactory.newSimpleInstance(getActivity(), trackSelector);
             mSMediaPlayer.setPlayer(mSexoPlayer);
+
         }
         else {
-            mSexoPlayer.stop();
+            releaseExoPlayer();
         }
         Uri medialUrl = Uri.parse(url);
         MediaSource mediaSource = new ExtractorMediaSource(medialUrl,
@@ -131,17 +133,37 @@ public class CfARecipeStepDetailsFragment extends Fragment implements View.OnCli
         RecipeStepModel curStep = mRecipeSteps.get(setpId);
         mStepSDTxtV.setText(curStep.getShortDescription());
         mStepFDTxtV.setText(curStep.getDescription());
-        String mediaUrl = curStep.getVideoURL();
-        if (null != mediaUrl && mediaUrl.length() > 0 ){
-            initializePlayer(mediaUrl);
-            mThumbNailImgV.setVisibility(View.GONE);
-        }
-        else{
-            if (null != mSexoPlayer){
-                mSexoPlayer.stop();
-                mSMediaPlayer.setVisibility(View.GONE);
+        if (ChefAvenueConsts.isInternetAvailable(getActivity())) {
+            String mediaUrl = curStep.getVideoURL();
+            if (null != mediaUrl && mediaUrl.length() > 0) {
+                initializePlayer(mediaUrl);
+            }
+            else {
+                releaseExoPlayer();
+
+            }
+            final String thumbNailUrl = curStep.getThumbnailURL();
+            if (null != thumbNailUrl && thumbNailUrl.length() > 0){
+                new Thread(){
+                    @Override
+                    public void run() {
+                        final Bitmap bitmap = ChefAvenueConsts.getBitmapFromURL(thumbNailUrl);
+                        getActivity().runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                mSMediaPlayer.setDefaultArtwork(bitmap);
+                            }
+                        });
+                    }
+                }.start();
             }
         }
+        else{
+            releaseExoPlayer();
+            Toast.makeText(getActivity(), getString(R.string.no_internet_Connection),
+                    Toast.LENGTH_LONG).show();
+        }
+
 
     }
 

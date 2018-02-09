@@ -1,5 +1,16 @@
 package com.manju23reddy.chefavenue.ui.util;
 
+import android.content.Context;
+import android.graphics.Bitmap;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import android.graphics.BitmapFactory;
+
 /**
  * Created by MReddy3 on 2/7/2018.
  */
@@ -62,6 +73,33 @@ public final class ChefAvenueConsts {
 
     private ChefAvenueConsts(){
 
+    }
+
+    public static boolean isInternetAvailable(Context context){
+        ConnectivityManager conManager = (ConnectivityManager)
+                context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetwork = conManager.getActiveNetworkInfo();
+        if (null != activeNetwork && activeNetwork.isConnectedOrConnecting()) {
+            return true;
+        }
+        else{
+            return false;
+        }
+    }
+
+    public static Bitmap getBitmapFromURL(String src) {
+        try {
+            URL url = new URL(src);
+            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+            connection.setDoInput(true);
+            connection.connect();
+            InputStream input = connection.getInputStream();
+            Bitmap myBitmap = BitmapFactory.decodeStream(input);
+            return myBitmap;
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 
 
