@@ -90,7 +90,9 @@ public class CfARecipeStepDetailsFragment extends Fragment implements View.OnCli
         if (null != savedInstanceState){
             mRecipeSteps = savedInstanceState.getParcelableArrayList(ChefAvenueConsts.RECIPE_STEPS);
             mCurrentStep = savedInstanceState.getInt(ChefAvenueConsts.STEP_ID);
-            mPrevPos = savedInstanceState.getLong(ChefAvenueConsts.PLAYER_POS);
+            if (savedInstanceState.containsKey(ChefAvenueConsts.PLAYER_POS)) {
+                mPrevPos = savedInstanceState.getLong(ChefAvenueConsts.PLAYER_POS);
+            }
         }
         else{
             args = this.getArguments();
@@ -113,8 +115,10 @@ public class CfARecipeStepDetailsFragment extends Fragment implements View.OnCli
         super.onSaveInstanceState(outState);
         outState.putInt(ChefAvenueConsts.STEP_ID, mCurrentStep);
         outState.putParcelableArrayList(ChefAvenueConsts.RECIPE_STEPS, mRecipeSteps);
-        long pos = mSexoPlayer.getCurrentPosition();
-        outState.putLong(ChefAvenueConsts.PLAYER_POS, pos);
+        if (null != mSexoPlayer) {
+            long pos = mSexoPlayer.getCurrentPosition();
+            outState.putLong(ChefAvenueConsts.PLAYER_POS, pos);
+        }
 
 
     }
