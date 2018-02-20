@@ -6,6 +6,7 @@ import android.content.ComponentName;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.app.NavUtils;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -14,6 +15,7 @@ import android.widget.Toast;
 
 import com.manju23reddy.chefavenue.R;
 import com.manju23reddy.chefavenue.ui.data.RecipesDataHolder;
+import com.manju23reddy.chefavenue.ui.model.RecipeIngredientModel;
 import com.manju23reddy.chefavenue.ui.model.RecipesModel;
 import com.manju23reddy.chefavenue.ui.util.ChefAvenueConsts;
 
@@ -40,8 +42,6 @@ public class CfARecipeDetailsActivity extends AppCompatActivity implements IReci
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_recipe);
-
-
 
         mIsTwoPane = (null != findViewById(R.id.lyt_tablet_view)) ? true : false;
 
@@ -87,7 +87,10 @@ public class CfARecipeDetailsActivity extends AppCompatActivity implements IReci
             }
         }
         getSupportActionBar().setTitle(mSelectedRecipe.getRecipeName());
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
+
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -107,6 +110,10 @@ public class CfARecipeDetailsActivity extends AppCompatActivity implements IReci
             Toast.makeText(this,
                     mSelectedRecipe.getRecipeName()+" Ingredients added to your widget.",
                     Toast.LENGTH_LONG).show();
+            return true;
+        }
+        else if(item.getItemId() == android.R.id.home){
+            onBackPressed();
             return true;
         }
         else{
@@ -231,7 +238,7 @@ public class CfARecipeDetailsActivity extends AppCompatActivity implements IReci
                     stepFrag.onBackPressed();
                     break;
                 case ALL_LIST_FRAGMENT:
-                    super.onBackPressed();
+                    NavUtils.navigateUpFromSameTask(this);
                     break;
                 case INGREDIENT_LIST_FRAGMENT:
                     CfARecippeIngredientsDetailsFragment ingredFrag =
@@ -239,13 +246,12 @@ public class CfARecipeDetailsActivity extends AppCompatActivity implements IReci
                     ingredFrag.onBackPressed();
                     break;
                 default:
-                    super.onBackPressed();
+                    NavUtils.navigateUpFromSameTask(this);
                     break;
-
             }
         }
         else {
-            super.onBackPressed();
+            NavUtils.navigateUpFromSameTask(this);
         }
 
     }

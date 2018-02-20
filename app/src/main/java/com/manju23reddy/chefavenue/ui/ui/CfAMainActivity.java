@@ -144,20 +144,7 @@ public class CfAMainActivity extends AppCompatActivity implements
             @Override
             public ArrayList<RecipesModel> loadInBackground() {
                 try{
-                    String recipesJSON = null;
-                    InputStream is = getAssets().open("baking.json");
-                    int size = is.available();
-                    byte[] bufffer = new byte[size];
-                    is.read(bufffer);
-                    is.close();
-                    recipesJSON = new String(bufffer, "UTF-8");
-                    JSONArray allReceipes = new JSONArray(recipesJSON);
-                    RecipesDataHolder holder = RecipesDataHolder.getRecipesDataHolderInstance();
-                    holder.parseRecipesFromJSON(allReceipes);
 
-                    //Todo just for debug remove later
-                    Log.d(TAG, RecipesDataHolder.getRecipesDataHolderInstance().getAllRecipes().
-                            toString());
                     return RecipesDataHolder.getRecipesDataHolderInstance().getAllRecipes();
                 }
                 catch (Exception ee){

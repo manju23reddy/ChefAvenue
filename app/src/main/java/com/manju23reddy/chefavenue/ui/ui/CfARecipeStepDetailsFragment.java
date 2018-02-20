@@ -13,6 +13,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.exoplayer2.C;
 import com.google.android.exoplayer2.DefaultLoadControl;
 import com.google.android.exoplayer2.ExoPlayer;
 import com.google.android.exoplayer2.ExoPlayerFactory;
@@ -52,6 +53,7 @@ public class CfARecipeStepDetailsFragment extends Fragment implements View.OnCli
     boolean mIsTab = false;
     int mCurrentStep = 0;
     ArrayList<RecipeStepModel> mRecipeSteps;
+    long mPrevPos;
 
 
     public CfARecipeStepDetailsFragment(){
@@ -84,10 +86,11 @@ public class CfARecipeStepDetailsFragment extends Fragment implements View.OnCli
 
 
         Bundle args;
-
+        mPrevPos = C.TIME_UNSET;
         if (null != savedInstanceState){
             mRecipeSteps = savedInstanceState.getParcelableArrayList(ChefAvenueConsts.RECIPE_STEPS);
             mCurrentStep = savedInstanceState.getInt(ChefAvenueConsts.STEP_ID);
+            mPrevPos = savedInstanceState.getLong(ChefAvenueConsts.PLAYER_POS);
         }
         else{
             args = this.getArguments();
@@ -110,6 +113,10 @@ public class CfARecipeStepDetailsFragment extends Fragment implements View.OnCli
         super.onSaveInstanceState(outState);
         outState.putInt(ChefAvenueConsts.STEP_ID, mCurrentStep);
         outState.putParcelableArrayList(ChefAvenueConsts.RECIPE_STEPS, mRecipeSteps);
+        long pos = mSexoPlayer.getCurrentPosition();
+        outState.putLong(ChefAvenueConsts.PLAYER_POS, pos);
+
+
     }
 
     public void initializePlayer(String url){
@@ -128,6 +135,7 @@ public class CfARecipeStepDetailsFragment extends Fragment implements View.OnCli
                 new DefaultDataSourceFactory(getActivity(), "Recipe"),
                 new DefaultExtractorsFactory(),
                 null, null);
+        mSexoPlayer.seekTo(mPrevPos);
         mSexoPlayer.prepare(mediaSource);
         mSexoPlayer.setPlayWhenReady(true);
     }
@@ -171,6 +179,12 @@ public class CfARecipeStepDetailsFragment extends Fragment implements View.OnCli
     }
 
     @Override
+    public void onStop() {
+        super.onStop();
+        releaseExoPlayer();
+    }
+
+    @Override
     public void onAttach(Context context) {
         super.onAttach(context);
         try{
@@ -187,6 +201,7 @@ public class CfARecipeStepDetailsFragment extends Fragment implements View.OnCli
             mSexoPlayer.stop();
             mSexoPlayer.release();
             mSexoPlayer = null;
+            mSMediaPlayer.removeAllViews();
         }
     }
 

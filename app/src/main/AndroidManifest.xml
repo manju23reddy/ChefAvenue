@@ -3,7 +3,7 @@
     package="com.manju23reddy.chefavenue">
 
     <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
     <application
         android:allowBackup="true"
@@ -12,14 +12,15 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".ui.ui.CfAMainActivity">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
+        <activity android:name=".ui.ui.CfAMainActivity"
+            android:launchMode="singleTop"/>
+        <activity android:name=".ui.ui.CfARecipeDetailsActivity"
+            android:parentActivityName=".ui.ui.CfAMainActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".ui.ui.CfAMainActivity"
+            />
         </activity>
-        <activity android:name=".ui.ui.CfARecipeDetailsActivity" />
 
         <receiver android:name=".ui.ui.ChefAvenueWidget">
             <intent-filter>
@@ -30,6 +31,18 @@
                 android:name="android.appwidget.provider"
                 android:resource="@xml/chef_avenue_widget_info" />
         </receiver>
+
+        <activity android:name=".ui.ui.LauncherScreen">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+        <service
+            android:name=".ui.services.RecipesDownloaderService"
+            android:exported="false"></service>
     </application>
 
 </manifest>

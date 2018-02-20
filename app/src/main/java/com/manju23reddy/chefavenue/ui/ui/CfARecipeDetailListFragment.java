@@ -116,7 +116,7 @@ public class CfARecipeDetailListFragment extends Fragment implements View.OnClic
                         int top = (v == null)? 0 : (v.getTop() -
                                 mStepsRcv.getPaddingTop());
 
-                        laytManager.scrollToPositionWithOffset(scrollPos, top);
+                        //laytManager.scrollToPositionWithOffset(scrollPos, top);
                     }
                 }, 1000);
             }

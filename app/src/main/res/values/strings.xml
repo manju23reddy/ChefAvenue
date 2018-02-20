@@ -9,4 +9,6 @@
     <string name="appwidget_text">EXAMPLE</string>
     <string name="add_widget">Add widget</string>
     <string name="no_internet_Connection">No Internet Connection</string>
+    <string name="chef_ave_logo">Chef Avenue logo description</string>
+    <string name="failed_to_download_recipes">Failed to Download Recipes.</string>
 </resources>
