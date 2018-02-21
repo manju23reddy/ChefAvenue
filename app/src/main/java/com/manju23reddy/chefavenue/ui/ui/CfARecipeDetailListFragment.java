@@ -121,7 +121,7 @@ public class CfARecipeDetailListFragment extends Fragment implements View.OnClic
                 }, 1000);
             }
             else {
-                RecipesModel model = RecipesDataHolder.getRecipesDataHolderInstance().
+                RecipesModel model = RecipesDataHolder.getRecipesDataHolderInstance(getContext()).
                         getRecipe(mSelectedRecipePos);
                 mStepsAdapter.setSteps(model.getSteps());
             }

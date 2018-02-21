@@ -139,6 +139,7 @@ public class CfARecipeStepDetailsFragment extends Fragment implements View.OnCli
                 new DefaultDataSourceFactory(getActivity(), "Recipe"),
                 new DefaultExtractorsFactory(),
                 null, null);
+
         mSexoPlayer.seekTo(mPrevPos);
         mSexoPlayer.prepare(mediaSource);
         mSexoPlayer.setPlayWhenReady(true);

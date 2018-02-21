@@ -64,7 +64,8 @@ public class CfARecipeDetailsActivity extends AppCompatActivity implements IReci
                         findFragmentByTag(Fragment_TAGS[last_frag]);
             }
             mSelectedPos = savedInstanceState.getInt(ChefAvenueConsts.RECIPE_ID);
-            mSelectedRecipe = RecipesDataHolder.getRecipesDataHolderInstance().
+            mSelectedRecipe = RecipesDataHolder.getRecipesDataHolderInstance(
+                    getApplicationContext()).
                     getRecipe(mSelectedPos);
         }
         else {
@@ -72,7 +73,8 @@ public class CfARecipeDetailsActivity extends AppCompatActivity implements IReci
             if (null != inComingIntet){
                 Bundle args = inComingIntet.getExtras();
                 mSelectedPos = args.getInt(ChefAvenueConsts.RECIPE_ID);
-                mSelectedRecipe = RecipesDataHolder.getRecipesDataHolderInstance().
+                mSelectedRecipe = RecipesDataHolder.getRecipesDataHolderInstance(
+                        getApplicationContext()).
                         getRecipe(mSelectedPos);
 
             }

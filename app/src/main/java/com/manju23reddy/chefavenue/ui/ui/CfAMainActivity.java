@@ -93,7 +93,8 @@ public class CfAMainActivity extends AppCompatActivity implements
     protected void onRestoreInstanceState(final Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
 
-        mRecipeAdapter.setRecipes(RecipesDataHolder.getRecipesDataHolderInstance().getAllRecipes());
+        mRecipeAdapter.setRecipes(RecipesDataHolder.getRecipesDataHolderInstance(
+                getApplicationContext()).getAllRecipes());
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
@@ -132,7 +133,7 @@ public class CfAMainActivity extends AppCompatActivity implements
             @Override
             protected void onStartLoading() {
                 ArrayList<RecipesModel> dataRecipes = RecipesDataHolder.
-                        getRecipesDataHolderInstance().getAllRecipes();
+                        getRecipesDataHolderInstance(getApplicationContext()).getAllRecipes();
                 if ( null != dataRecipes){
                     deliverResult(dataRecipes);
                 }
@@ -145,7 +146,8 @@ public class CfAMainActivity extends AppCompatActivity implements
             public ArrayList<RecipesModel> loadInBackground() {
                 try{
 
-                    return RecipesDataHolder.getRecipesDataHolderInstance().getAllRecipes();
+                    return RecipesDataHolder.getRecipesDataHolderInstance(getApplicationContext()).
+                            getAllRecipes();
                 }
                 catch (Exception ee){
                     Log.e(TAG, ee.getMessage());
